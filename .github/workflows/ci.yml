@@ -24,4 +24,20 @@ jobs:
           docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS}}
           docker push ${{ secrets.REGISTRY_USER }}/portfolio2:${{github.run_number}}
           docker push ${{ secrets.REGISTRY_USER }}/portfolio2 
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: ssh to server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          #port: ${{ secrets.PORT }}
+          script: |
+                  docker rm -f resume1
+                  docker run -d --name resume1 -p 8080:5001 ${{ secrets.REGISTRY_USER }}/portfolio2:${{github.run_number}}
           
+        
