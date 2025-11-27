@@ -38,5 +38,5 @@ jobs:
               run:
             - name: Sync to S3
               run: |
-                 aws s3 sync . s3://deploy-s3.stepin.ink \ --delete \  --exclude ".git/*" \   --exclude ".github/*"
+                 aws s3 sync . s3://gweanqu0s3 \ --delete \  --exclude ".git/*" \   --exclude ".github/*"
             
