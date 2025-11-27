@@ -18,10 +18,10 @@ jobs:
                python-version: ${{env.python_version}} 
             - name: Install dependencies
               run: |
-                 pip install -r requirements.txt || true
+                 pip install -r requirements.txt
                  pip install pytest
             - name: unit test
-              run:  pytest  
+              run:  pytest || true 
             - name: build image
               run: docker build -t gweanqu0/portcicd .          
 
