@@ -21,3 +21,16 @@ jobs:
             - name: build image
               run: docker build -t gweanqu0/portcicd .          
 
+            - name: configure Aws credentials
+              uses: aws-actions/configure-aws-credentials
+              with:
+                role-to-assume: arn:aws:iam::762233754577:role/OIDC-ROLE
+                aws-region: us-east-1
+
+            - name: Upload to S3
+              uses: shallwefootball/s3-upload-action@v1.3.1
+             with:
+             bucket: gweanqu0s3 
+             region: us-east-1
+             source-dir: .
+             dest-dir: utc-app/    
