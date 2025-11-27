@@ -22,7 +22,7 @@ jobs:
               run: docker build -t gweanqu0/portcicd .          
 
             - name: configure Aws credentials
-              uses: aws-actions/configure-aws-credentials
+              uses: aws-actions/configure-aws-credentials@v4
               with:
                 role-to-assume: arn:aws:iam::762233754577:role/OIDC-ROLE
                 aws-region: us-east-1
