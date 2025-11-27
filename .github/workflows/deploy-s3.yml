@@ -35,8 +35,6 @@ jobs:
                 aws-region: us-east-1
 
             - name: Upload to S3
-              run:
-            - name: Sync to S3
               run: |
-                 aws s3 sync . s3://gweanqu0s3 \ --delete \  --exclude ".git/*" \   --exclude ".github/*"
+               aws s3 sync . s3://gweanqu0s3/utc-app/ --delete
             
