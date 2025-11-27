@@ -7,12 +7,12 @@ on:
     branches: [ "main" ]
 
 env:
-  python-version: 3.11      
+  python-version: "3.11"      
 jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@va
+            - uses: actions/checkout@v4
             - uses: actions/setup-python@v4
               with:
                python-version: ${{env.python_version}} 
@@ -29,7 +29,7 @@ jobs:
 
             - name: Upload to S3
               run:
-                - name: Sync to S3
-            run: |
-             aws s3 sync . s3://deploy-s3.stepin.ink \ --delete \  --exclude ".git/*" \   --exclude ".github/*"
+            - name: Sync to S3
+              run: |
+                 aws s3 sync . s3://deploy-s3.stepin.ink \ --delete \  --exclude ".git/*" \   --exclude ".github/*"
             
