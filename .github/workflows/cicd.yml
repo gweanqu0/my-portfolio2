@@ -1,4 +1,4 @@
-name: utc-app CI/CD
+name: utc-app CI/CDD
 
 on:
   push:
