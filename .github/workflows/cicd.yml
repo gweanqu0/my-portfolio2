@@ -15,7 +15,7 @@ env:
   IMAGE_NAME: my-portfolio2
   AWS_REGION: us-east-1
   ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
-  ECR_REPO: ${{ secrets.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/dev
+  ECR_REPO: ${{ secrets.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/dev/my-portfolio2
 
 jobs:
     build:
@@ -44,8 +44,7 @@ jobs:
                docker build -t ${{ env.IMAGE_NAME }} .
             - name: Tag Docker image    
               run: |
-               docker tag my-portfolio2:latest ***.dkr.ecr.us-east-1.amazonaws.com/dev
-
+               docker tag ${{ env.IMAGE_NAME }}: ${{ env.ECR_REPO }}
               
 
             - name: Scan Docker image with Trivy
