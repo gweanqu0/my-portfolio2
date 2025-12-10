@@ -1,5 +1,4 @@
-name: utc-app CI/CDD
-
+name: Utc App ci/cd
 on:
   push:
     branches: [ "main" ]
@@ -11,51 +10,54 @@ permissions:
       contents: read
 
 env:
-  python-version: 3.11 
-  IMAGE_NAME: my-portfolio2
+  python_version: 3.11
+  IMAGE_NAME: portfolio
   AWS_REGION: us-east-1
   ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
-  ECR_REPO: ${{ secrets.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/dev/my-portfolio2
+  ECR_REPO: ${{ secrets.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/dev
+  IMAGE_TAG:  ${{ github.sha }}
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-python@v4
-              with:
-                python-version: ${{env.python-version}} 
-            - name: Install pytest
-              run:  pip install -r requirements.txt
-            - name: unit test
-              run: pytest || true
-            - name: Configure AWS credentials using OIDC
-              uses: aws-actions/configure-aws-credentials@v2
-              with:
-               role-to-assume: ${{ secrets.ROLE_ARN2 }}
-               aws-region: ${{ env.AWS_REGION }}
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+            python-version: ${{env.python_version}}
 
-            - name: Login to Amazon ECR
-              id: login-ecr
-              uses: aws-actions/amazon-ecr-login@v1
+        # or $python_version
+      - name: Install pytest
+        run: pip install -r requirements.txt
+      - name: unit test
+        run: pytest test.py
 
-            - name: Build, Tag & Push Docker image
-              uses: docker/build-push-action@v5
-              with:
-               context: .
-               push: true
-                tags:|${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-            - name: Scan Docker image with Trivy
-              uses: aquasecurity/trivy-action@master
-              with:
-                image-ref: ${{ env.ECR_REPO }}:lastest
-                format: table
-                exit-code: '0' 
-                severity: CRITICAL,HIGH
-            - name: Push Docker image to Amazon ECR
-              run: |
-               docker push ${{ env.ECR_REPO }}:${{ env.IMAGE_TAG }}: latest
- 
-    
- 
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ env.IMAGE_NAME }} .
+      - name: Tag Docker image    
+        run: |
+          docker tag ${{ env.IMAGE_NAME }}:latest ${{ env.ECR_REPO }}:${{ env.IMAGE_TAG }}
+         
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.ECR_REPO }}:${{ env.IMAGE_TAG }}
+          format: table
+          exit-code: '1' 
+          severity: CRITICAL,HIGH
+
+      - name: Push Docker image to Amazon ECR
+        run: |
+          docker push ${{ env.ECR_REPO }}:${{ env.IMAGE_TAG }}
+
+  
