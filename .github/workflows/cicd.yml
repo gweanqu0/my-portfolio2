@@ -30,7 +30,7 @@ jobs:
       - name: Install pytest
         run: pip install -r requirements.txt
       - name: unit test
-        run: pytest | true
+        run: pytest 
 
       - name: Configure AWS credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v2
