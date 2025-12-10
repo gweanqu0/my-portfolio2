@@ -14,7 +14,7 @@ env:
   IMAGE_NAME: my-portfolio2
   AWS_REGION: us-east-1
   ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
-  ECR_REPO: ${{ secrets.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/dev/my-portfolio2
+  ECR_REPO: ${{ secrets.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/dev
   IMAGE_TAG:  ${{ github.sha }}
 
 jobs:
