@@ -44,7 +44,7 @@ jobs:
                docker build -t ${{ env.IMAGE_NAME }} .
             - name: Tag Docker image    
               run: |
-               docker tag ${{ env.IMAGE_NAME }}: ${{ env.ECR_REPO }}
+               docker tag ${{ env.IMAGE_NAME }}:latest${{ env.ECR_REPO }}:latest
               
 
             - name: Scan Docker image with Trivy
